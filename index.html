@@ -1,62 +1,347 @@
-<!DOCTYPE html>
-<html>
+
+
+
+<!doctype html>
+<html lang="en">
 <head>
-<title>J.Cole Music</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-    <style>
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-}
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="A free, massively multiplayer game that plays in your browser!" />
+<meta name="keywords" content="free mmo rpg, fantasy adventure game free to play, free mmo games no download, free mmo no download, free online mmo games no download" />
+<title>AdventureQuest Worlds on aq.com Play Online Now!</title>
 
-li {
-    float: left;
-}
+<meta property="og:title" content="Play AdventureQuest Worlds Now!"/>
+<meta property="og:site_name" content="AdventureQuest Worlds"/>
+<meta property="og:type" content="Game"/>
+<meta property="og:image" content="http://www.aq.com/img/gfx/play-aqw.jpg"/>
 
-li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
+<link type="text/css" rel="stylesheet" href="news/style-whatsnew.css"/>
+<link type="text/css" rel="stylesheet" href="playnow.css?ver=2"/>
 
-li a:hover {
-    background-color: #111;
-}
-</style>
-</head>
-<body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
 
-<ul>
-  <li><a class="active" href="index.html">Home</a></li>
-  <li><a href="history.html">History</a></li>
-  <li><a href="discography.html">Discography</a></li>
-  
+<script type="text/javascript" src="ballyhoo/ballyhoo4.js?ver=3"></script>
+<script type="text/javascript" src="AQWpayment2.js"></script>
+<script type="text/javascript" src="playnow.js?ver=1"></script>
+<script type="text/javascript" src="questprogress.js?ver=5"></script>
+<script type="text/javascript" src="facebook3.js?ver=2.6"></script>
+
+<script type="text/javascript">
+	var remote_addr = "199.185.67.13";
+    var flashmode = "";
+    var params = {
+        LOOP : "false",
+        SCALE : "exactfit",
+        allowScriptAccess : "always",
+        allowFullScreen : "true",
+        menu : "false",
+        flashvars: "&sLang=en"
+    }
     
-</ul>
-<div class="container-fluid">
-  <h1>J.Cole</h1>
-  <p>a website dedocated to J.Cole</p>
-  <div class="row">
-    <a href="http://shop.dreamville.com/"</a>
-    <div class="col-sm-4" <p> Merchandise</p><img src="http://i.ebayimg.com/images/g/TH4AAOSw~gRVrgvP/s-l300.jpg" alt="Mountain View" style="width:308px;height:300px;"> </div>
-  
-  <a href="https://itunes.apple.com/ca/artist/j.-cole/id73705833"</a>
-  <div class="col-sm-4"  <p> Itunes Music </p><img src="https://dopetune.com/wp-content/uploads/2016/12/jcole-future-roc-nation.jpg" alt="Mountain View" style="width:308px;height:300px;"> </div>
+    function embedGame() {
+        swfobject.embedSWF("http://aqworldscdn.aq.com/game/gamefiles/Loader.swf?ver=2", "flashContent", "960", "550", "9.0", null, null, params, { id: "AQWGame", name: "flashContent" });
+    }
 
-<a href="https://www.google.ca/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#safe=strict&q=j+cole+albums"</a>
-<div class="col-sm-4" <p> Albums</p> <img src="http://www.contactmusic.com/images/content/jcole-2014-forest-hills-drive.jpg" alt="Mountain View" style="width:308px;height:300px;"></div>
+    function playAnyway() {
+        // manual override to play using older version of flash
+        $("#minFlash").hide();
+        $("#flashContent").show();
+        embedGame();
+    }
+
+    function runcheck() {
+        // check for flash version
+        var version = swfobject.getFlashPlayerVersion();
+        var major = version.major;
+        if(major != undefined) {
+            if(!swfobject.hasFlashPlayerVersion("9")) {
+                flashmode = "noflash";
+                return; // show need-flash message
+            }
+            //else if(!swfobject.hasFlashPlayerVersion("18")) {
+            //    flashmode = "oldflash";
+            //    return; // show needs-to-update message
+            //}
+        }                
+        // load the SWF
+        embedGame();
+    }
+
+    // embed the game right now, even if page isn't fully ready yet
+    runcheck();
+			
+    // HTML is fully loaded (but async scripts might not be ready yet)
+    $(document).ready(function() {
+
+        if(flashmode=="noflash") {
+            $("#flashContent").hide();
+            $("#noflashImage").attr("src","/shared/images/no-flash-twilly.jpg");
+            $("#noflashdetected").show();
+        } else if(flashmode=="oldflash") {
+            $("#flashContent").hide();
+            $('#minFlashInner').css("background-image", "url(/play-now/images/aqw_noflashplayer_update.jpg)");  
+            $("#minFlash").show();
+        }
+
+        // load external scripts
+        $.ajax({url: "http://be.sponsorpay.com/assets/web_client.js", dataType: "script", cache: true});
+        $.ajax({url: "http://www.aq.com/scripts/jquery.cookie.js", dataType: "script", cache: true}).done(function() {
+            var savedsize = $.cookie("aqwplaysize");
+            if (savedsize != undefined) changeGameSize(savedsize);
+        });
+    });
+
+</script>
+<base target="_blank"/>
+</head>
+
+<body>
+<link href="/shared/m-battlebar/style-battlebar.css" media="screen" rel="stylesheet" type="text/css" />
+
+<div id="battlebar">
+  <div class="wrap"> <a href="http://www.artix.com/" target="_blank"><img src="/shared/m-battlebar/images/ae-2014-logo.jpg" alt="Artix Entertainment" width="76" height="34" /></a>
+  
+    <div class="bar">
+        <ul id="battlenav" class="dropdown dropdown-horizontal resetWidth">
+          <li class="top"><a class="dir" href="http://www.artix.com/games" target="_blank">More Games</a></li>
+          <li class="top"><a class="dir" href="/help/" target="_blank">Help</a></li>
+        </ul>
+     </div>
   </div>
 </div>
-   
+	
+<div id="main" class="center">
+<img style="visibility:hidden;position:absolute;top:0;left:0;" src="https://www.aq.com/img/gfx/play-aqw.jpg" alt="Play AQW">
+
+
+<table class="center" style="width:960px;border:none;">
+
+    
+    
+    <tr valign="top">
+      <td class="center" style="width:100%;">
+        
+          <!--  Hidden DIV to display if older version of Flash installed -->
+         <div id="minFlash" style="width:960px; height:550px; margin:0px; padding:0px;display:none;">
+            <div id="minFlashInner" style="background: #000000 center top no-repeat; width:950px">
+              <div style="padding-top:360px;padding-bottom:30px;width:314px;margin:0 auto;text-align:center;"> 
+      	        <a style="cursor: pointer" onclick='window.location="http://get.adobe.com/flashplayer/"' target='_blank'><img src="images/btn-get.png" alt="Update Flash"/></a> 
+                <p><a style="cursor: pointer" onclick='playAnyway()'><img src="images/btn-continue.png" alt="Play"/></a></p>
+              </div>
+           </div>
+        </div>
+
+
+        <!--  Hidden DIV to display if no version of Flash was detected -->
+        <div id="noflashdetected" style="width:960px; height:550px; margin:0px; padding:0px;display:none;">
+            
+            <div id="desktop-viewonly">
+		        <p><a href="http://www.adobe.com/go/getflashplayer" target="_blank"><img id="noflashImage" src="" alt="Get Adobe Flash player" /></a></p>
+                <div class="clear"></div>
+            </div>
+            
+            <div class="no-flash-mobile">
+            	<div class="link-wrap"><a class="app" href="https://itunes.apple.com/us/artist/artix-entertainment-llc/id426700523"></a>                
+            	    <a class="google" href="https://play.google.com/store/apps/developer?id=Artix%20Entertainment%20LLC&hl=en"></a>
+            	    <a class="artix" href="http://www.artix.com/" target="_blank"></a>
+                    <p><a style="color:#E48E06;" href="http://www.adobe.com/software/flash/about/" target="_blank">or click here to check if Flash Plugin is compatible</a></p>
+            	</div>
+            </div>
+		</div>
+
+		<div id="flashContent" style="width:960px; height:550px; margin:0px; padding:0px;">
+            <p style="font-size:20px; color:#AAAAAA;">Preparing to Play...<br/>Please refresh this page if the game does not start loading.</p>
+        </div>
+
+        <script type="text/javascript"></script>       
+        <noscript>
+			<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" id="u35941" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,28,0" width="100%" height="100%">
+                <param name="movie" value="http://aqworldscdn.aq.com/game/gamefiles/Loader.swf?ver=2" />
+                <param name="LOOP" value="false" />
+                <param name="SCALE" value="exactfit" />
+                <param name="allowScriptAccess" value="always" />
+                <param name="allowFullScreen" value="true" />
+                <param name="menu" value="false" />
+                <param name="wmode" value="window" />
+                <param name="FlashVars" value="&sLang=en" />
+                <embed id="gameSWF" src="http://aqworldscdn.aq.com/game/gamefiles/Loader.swf?ver=2" width="100%" height="100%" loop="false" 
+                    pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash" 
+                    type="application/x-shockwave-flash" scale="exactfit" allowscriptaccess="always" allowFullScreen="true" 
+                    menu="false" flashvars="&sLang=en"></embed>
+            </object>
+         </noscript>
+	  </td>
+    </tr>
+    
+</table>
+
+        <div class="clear"></div>
+
+
+<div class="sprite menu" id="dialogAnchor">
+	<div class="menuContent">
+        <div class="sprite dns">
+            <a href="/gamedesignnotes/" target="_blank"><span>AQWorlds Design Notes</span></a>
+        </div>
+		<div class="sprite upgrade">
+            <a href="https://www.aq.com/order-now/direct/" target="_blank"><span>AQW Member Upgrade</span></a>
+        </div> 
+		
+		<div class="sprite freeAcs">
+            <a href="https://www.aq.com/aeXtras/offers/" target="_blank"><span>Earn Free ACs</span></a>
+        </div>
+		
+        <div class="sprite aqworlds">
+            <a href="http://www.aq.com/" target="_blank"><span>AQWorlds Homepage</span></a>
+        </div>
+        
+        <div class="fb">
+            <iframe src="https://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2FAQWorldsMMO&amp;send=false&amp;layout=button_count&amp;width=147&amp;show_faces=false&amp;action=like&amp;colorscheme=dark&amp;font=arial&amp;height=43" style="width:147px; height:43px;" scrolling="no"></iframe>
+        </div>
+
+        <div class="watchvideo">
+            <a id="video_widget_button" style="display:none;" href="#" onclick="showSponsorVideo();return false;"><img alt="Watch Videos to Earn AC" src="images/watchvid.png" width="98" height="70"/></a>
+        </div>
+
+        <div class="sprite gameSize">
+            <ul>
+                <li class="topLevel"><a class="none" onclick="return false;" href="#"><span>Game Size</span></a>
+                <ul>
+                    <li class="first"><a onclick="return updateGameSize('tiny');" href="#">Tiny</a></li>
+                    <li><a onclick="return updateGameSize('normal');" href="#">Normal</a></li>
+                    <li><a onclick="return updateGameSize('large');" href="#">Large</a></li>
+                    <li><a onclick="return updateGameSize('huge');" href="#">HUGE</a></li>
+                </ul>
+                </li>
+            </ul>
+        </div>
+      </div>       
+  </div>
+
+
+  <div class="footer center" style="width:800px;">
+    <a href="http://www.aq.com/" target="_blank">Home</a> 
+        | <a href="http://forums2.battleon.com/f/tt.asp?forumid=209" target="_blank">Forums</a> 
+        | <a href="http://www.artix.com/bugs/" target="_blank">Report a Bug</a>
+        | <a href="http://www.aq.com/aw-howtoplay.asp" target="_blank">How to Play</a>
+        | <a href="http://www.heromart.com/" target="_blank">HeroMart</a>
+        | <a href="/help/">Help</a>
+
+        <!-- vid part was here -->    
+
+        <p>Copyright &copy; 2008-2017 Artix Entertainment, LLC</p>
+  </div>
+
+
+  <!-- The summary section is hidden text used for search-meta data -->
+  <div class="summary">
+    <h1>AdventureQuest Worlds is a Free Browser MMORPG game</h1>
+    <p>Come delve into the best free MMO RPG in the whole world (wide web)! AdventureQuest Worlds is a stunning fantasy adventure game, 
+    free to play for all. If you are seeking an engaging, adventurous, and free MMO with no download required then you have come to the right place. 
+    With AdventureQuest Worlds you will be able to play from anywhere because it is a browser-based platform. 
+    Allow the ever-expanding AdventureQuest Worlds to dazzle and entertain you as it has for 35 Million players!
+   </p>
+  </div>
+      
+  <iframe id="underframe" width="728" height="112" src="ballyhoo/blank.asp" scrolling="no"></iframe>
+</div>
+
+<div id="pagedesc" style="visibility:hidden;">
+    <h1>Play AdventureQuest Worlds, the Free Browser RPG MMO.</h1>
+</div>
+
+<span></span>
+<div id="fb-root"></div>
+
+<div id="showcase" class="floater2 center">
+    <br/><br/>
+    <br/><br/>
+    You are viewing a sponsor message.  Clicking the ad will open a new browser window.<br/>
+        In a few seconds, a button will appear to send you back to AQ Worlds.<br/>
+    <div id="closer" style="display:none;">
+        <input style="height:32px" type="button" onclick="javascript:showIt('hide');" value="Click here to return to AQWorlds" />
+    </div>
+    <br/><br/>
+    <iframe id="ff" width="900" height="600" src="ballyhoo/blank.asp" scrolling="no"></iframe>
+</div>
+
+
+<!-- Google Tag Manager -->
+<noscript>
+	<iframe src="//www.googletagmanager.com/ns.html?id=GTM-MBP6TJ" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<script>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MBP6TJ');</script>
+<!-- End Google Tag Manager -->
+
+
+<!-- Facebook addon -->
+<script type='text/javascript'>
+    (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+</script>
+
+
+<!-- USTREAM IFRAME BEGIN -->
+<script type="text/javascript">
+function us_show() {
+	var oDiv = isInternetExplorer ? document.all.ustream : document.getElementById('ustream');
+	oDiv.style.visibility = "visible";
+	var player = isInternetExplorer ? document.all.player : document.getElementById('player');
+	player.contentWindow.location.replace("ballyhoo/ustream.asp");
+}
+function us_hide() {
+	var oDiv = isInternetExplorer ? document.all.ustream : document.getElementById('ustream');
+	oDiv.style.visibility = "hidden";
+	var player = isInternetExplorer ? document.all.player : document.getElementById('player');
+	player.contentWindow.location.replace("ballyhoo/blank.asp");
+}
+function video_show() {
+	var oDiv = isInternetExplorer ? document.all.ustream : document.getElementById('ustream');
+	oDiv.style.visibility = "visible";
+	var player = isInternetExplorer ? document.all.player : document.getElementById('player');
+	player.contentWindow.location.replace("ballyhoo/videoplayer.asp");
+}
+
+function video_show2() {
+	Console.log("video function called");
+	var oDiv = isInternetExplorer ? document.all.ustream : document.getElementById('ustream');
+	oDiv.style.visibility = "visible";
+	var player = isInternetExplorer ? document.all.player : document.getElementById('player');
+	player.contentWindow.location.replace("ballyhoo/videoplayer2.asp");
+}
+
+function twitch_show() {
+	var oDiv = isInternetExplorer ? document.all.ustream : document.getElementById('ustream');
+	oDiv.style.visibility = "visible";
+	var player = isInternetExplorer ? document.all.player : document.getElementById('player');
+	player.contentWindow.location.replace("ballyhoo/twitch.asp");
+}
+
+function tutorial_show(vid) {
+	var oDiv = isInternetExplorer ? document.all.ustream : document.getElementById('ustream');
+	oDiv.style.visibility = "visible";
+	var player = isInternetExplorer ? document.all.player : document.getElementById('player');
+	player.contentWindow.location.replace("ballyhoo/tutorialplayer.asp?VID=" + vid);
+}
+</script>
+<div id="ustream" style="position:absolute; z-index:2; float:none; top:45px; left:50%; margin-left:-247px; visibility:hidden; text-align:center">
+<iframe id="player" height="296px" width="480px" src="" scrolling="no"></iframe>
+<input style="position:absolute; top:300px; left:190px;" type="button" onClick="javascript:us_hide();" value="Close Video" />
+</div>
+<!-- USTREAM IFRAME END -->
+
+
+<!-- tutorial tracking external stuff -->
+<img id="questpixel" height="1" width="1" src="/images/blank.png" />
 </body>
 </html>
